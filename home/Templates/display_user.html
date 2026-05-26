@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {{ wishlist|json_script:"wishlist-data" }}
+    {{ display_data|json_script:"display-data" }}
+    {{ userid|json_script:"user-id" }}
+
+<style>
+
+#taskbar {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color:burlywood;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.taskbar-button {
+    display: block;
+    padding: 15px 20px;
+    margin: 10px;
+    background-color:antiquewhite;
+    font-size: 16px;
+    font-style: oblique;
+    border: 0;
+    color: black;
+    opacity: 0.6;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.taskbar-button:hover{opacity: 1;}
+
+.container {
+    position: fixed;
+    top: 20px;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.layout-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px;
+}
+
+.generated-layout {
+    position: relative;
+    width: 500px;
+    height: 250px;
+    border: 1px solid #ccc;
+    padding: 50px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color:royalblue;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.generated-layout:hover{box-shadow: 4px 4px 10px firebrick;}
+
+#User_content{
+    position: fixed;
+    top: 10px;
+    left: 250px; 
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+</style>
+
+</head>
+<body>
+<div id="taskbar">
+        <button class="taskbar-button" id="Home" onclick="send_data('home',userid)">Home</button>
+        <button class="taskbar-button" id="New" onclick="send_data('New',userid)">New</button>
+        <button class="taskbar-button" id="Popular" onclick="send_data('Popular',userid)">Popular</button>
+        <button class="taskbar-button" id="category" onclick="send_data('category',userid)">Category</button>
+        <button class="taskbar-button" id="profile" onclick="send_data('Profile',userid)">Profile</button>
+        <button class="taskbar-button" id="blog-creation" onclick="send_data('write_blog',userid)">Write Blog</button>
+    </div>
+    <div id="User_content">
+        <h3 id="Username">Username</h3>
+        <h3 id="ID">ID</h3>
+        <h4 id="interest">interest</h6>
+        <div class="container">
+            <div id="wishlist" class="wishlist-container">
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const wishlist_data=json.parse(document.getElementById("wishlist_data").textContent);
+        const Display_data=JSON.parse(document.getElementById("display-data").textContent);
+        const userid=JSON.parse(document.getElementById("user-id").textContent);
+        let Index=0;
+
+        const title_text=document.getElementsByTagName("title").textContent;
+        document.getElementById(title_text).disabled;
+
+        function send_data(page,data=null) {
+    const message = "page_loaded";
+    switch (page) {
+        case 'home':
+            fetch("/Home/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+            
+        case 'display_blog':
+            fetch("/Blog_display/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'Profile':
+            fetch("/profile/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'write_blog':
+            fetch("/Blog_creation/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'New':
+            fetch("/new/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'Category':
+            fetch("/category/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+    }
+}
+
+        document.addEventListener("DOMContentLoaded",function(){
+            document.getElementById("Username").innerHTML=Display_data.Username;
+            document.getElementById("ID").innerHTML=Display_data.user_id;
+            document.getElementById("interest").innerHTML=Display_data.user_interest;
+            generateLayoutPair();
+            generateLayoutPair();
+        });
+
+        window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+            generateLayoutPair();
+            generateLayoutPair();
+            generateLayoutPair();
+        }
+    });
+
+        const wishlist = document.getElementById('wishlist');
+    
+    function generateLayoutPair() {
+        for (let i = 0; i < 2; i++) {
+            const layoutDiv = document.createElement('div');
+            layoutDiv.className = 'generated-layout';
+            
+            if (wishlist_data[Index]){
+                const object=wishlist_data[Index]
+                Index++;
+                const nodeList = createelement(object);
+                nodeList.forEach(node => layoutDiv.appendChild(node));
+                
+                wishlist.appendChild(layoutDiv);
+                layoutDiv.dataset.blogId=object.Blog_id;
+                layoutDiv.addEventListener('click', function () {
+                    send_data('display_blog',object.Blog_id)
+                    });
+            }else{
+                return;
+            }
+        }
+    }
+    
+    function createelement(object) {
+        const nodes = [];
+        
+        for (const element in object) {
+            let node=null;
+            switch (element) {
+                case 'Blog_title':
+                    node = title(object[element]);
+                    break;
+                    case 'Blog_Author_id':
+                        node = generate_author(object[element]);
+                        break;
+                        case 'Blog_likes':
+                            node = likes(object[element]);
+                            break;
+                            case 'Blog_characters':
+                                node = Character(object[element]);
+                                break;
+                                case 'Blog_category':
+                                    node = category(object[element]);
+                                    break;
+                                    case 'Blog_entry_date':
+                                        node = date(object[element]);
+                        break;
+                        case 'image_uri':
+                            node = Image(object[element]);
+                            break;
+                        default:
+                            continue;
+                        }
+                        if (node) nodes.push(node);
+                    }
+                    return nodes;
+                }
+                
+                
+    function generate_author(content){
+        node = document.createElement('p');
+        node.textContent = content;
+        node.addEventListener("click",function(){
+            send_data("Profile",content);
+        });
+        Object.assign(node.style,{
+            fontSize: '14px',
+            fontWeight: 'normal',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            left: '20px',
+            top: '20px',
+            width: '60px',
+            height: '20px'
+        });
+        return node;
+    }
+    
+    function category(content){
+        node = document.createElement('p');
+        node.textContent = content;
+        Object.assign(node.style,{
+            fontSize: '14px',
+            fontWeight: 'normal',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            left: '100px',
+            top: '20px',
+            width: '60px',
+            height: '20px'
+        });
+        return node;
+    }
+    
+    function title(content){
+        node = document.createElement('p');
+        node.textContent = content;
+        Object.assign(node.style,{
+            fontSize: '48px',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            position: 'absolute',
+            left: '40px', 
+            top: '80px',
+            width: '200px',
+            height: '80px'
+        });
+        return node;
+    }
+    
+    function Image(content){
+        node = document.createElement('img');
+        node.src = content;
+        node.alt = 'Generated image';
+        
+        Object.assign(node.style,
+        { objectFit: 'contain',
+        position: 'absolute',
+        left: '320px',
+        top: '80px',
+        width: '150px',
+        height:'120px' });
+        return node;
+    }
+    
+    function date(content){
+        node = document.createElement('p');
+        node.textContent = content;
+        Object.assign(node.style, {
+            fontSize:'14px',
+            fontWeight:'normal',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            left: '20px',
+            top: '200px',
+            width: '40px',
+            height: '20px'
+        });
+        return node;
+    }
+    
+    function Character(content){
+        node = document.createElement('p');
+        node.textContent = content;
+        Object.assign(node.style, {
+            fontSize: '14px',
+            fontWeight: 'normal',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            left: '160px',
+            top: '200px',
+            width: '40px',
+            height: '20px'
+        });
+        return node;
+    }
+    </script>
+</body>
+</html>

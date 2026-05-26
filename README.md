@@ -1,0 +1,1 @@
+It is web application in which user can write and read a blog. And also read or upload a book as a pdf. 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    {{ userid|json_script:"id-json" }}
+    <script>
+        document.addEventListener("DOMContentLoaded",function(){
+            const Display_data=JSON.parse("{{ mydata }}");
+            // const Display_data=JSON.parse(document.getElementById("mydata-json").textContent);
+            const userid=JSON.parse(document.getElementById("id-json").textContent);
+            fetch("/Home/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ status: Display_data })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Server response:", data);
+                });
+        })
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

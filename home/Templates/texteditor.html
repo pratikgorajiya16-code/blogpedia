@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+                #taskbar {
+    position: fixed;
+    top: 5px; /* below #intro */
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color:burlywood;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.taskbar-button {
+    display: block;
+    padding: 15px 20px;
+    margin: 10px;
+    background-color:antiquewhite;
+    font-size: 16px;
+    font-style: oblique;
+    border: 0;
+    color: black;
+    opacity: 0.6;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.taskbar-button:hover{opacity: 1;}
+
+        form{
+            margin-left: 250px;
+            padding: 5px;
+            position:fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box; 
+            height: 100%;
+            width: 1100px;
+            margin-top:0px;
+        }
+
+        .editor-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .editor-header {
+            background: linear-gradient(royalblue);
+            color: white;
+            padding: 5px;
+            text-align: center;
+        }
+
+        #blog_title{
+            padding-right: 20px;
+        }
+
+        #blog_image{
+            padding: 20px;
+        }
+
+        #blog_category{
+            padding-left: 20px;
+        }
+
+        .editor-header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .toolbar {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding: 0 10px;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .toolbar-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .toolbar-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .toolbar-select {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 120px;
+        }
+
+        .toolbar-select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .color-input {
+            width: 40px;
+            height: 35px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 3px;
+        }
+
+        .editor-area {
+            min-height: 400px;
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            border: none;
+            outline: none;
+            background: white;
+        }
+
+        .editor-area:focus {
+            outline: none;
+        }
+
+        .status-bar {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 12px;
+            color: #6c757d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .word-count {
+            font-weight: 500;
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .theme-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-btn.light { background: #ffffff; }
+        .theme-btn.dark { background: #343a40; }
+        .theme-btn.sepia { background: #f4f3e8; }
+
+        .theme-btn.active {
+            border-color: #007bff;
+            transform: scale(1.2);
+        }
+
+        /* Dark theme */
+        .editor-container.dark {
+            background: #343a40;
+            color: #f8f9fa;
+        }
+
+        .editor-container.dark .toolbar {
+            background: #495057;
+            border-color: #6c757d;
+        }
+
+        .editor-container.dark .toolbar-btn {
+            background: #6c757d;
+            color: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .editor-container.dark .toolbar-select {
+            background: #6c757d;
+            color: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .editor-container.dark .editor-area {
+            background: #343a40;
+            color: #f8f9fa;
+        }
+
+        .editor-container.dark .status-bar {
+            background: #495057;
+            border-color: #6c757d;
+        }
+
+        /* Sepia theme */
+        .editor-container.sepia {
+            background: #f4f3e8;
+            color: #5d4e37;
+        }
+
+        .editor-container.sepia .toolbar {
+            background: #ede8d3;
+        }
+
+        .editor-container.sepia .editor-area {
+            background: #f4f3e8;
+            color: #5d4e37;
+        }
+
+        .editor-container.sepia .status-bar {
+            background: #ede8d3;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-group {
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+                padding: 10px 0;
+                justify-content: center;
+            }
+
+            .toolbar-group:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+    {{ userid|json_script:"id-json" }}
+</head>
+<body>
+    <div id="taskbar">
+        <button class="taskbar-button" id="Home" onclick="send_data('home',userid)">Home</button>
+        <button class="taskbar-button" id="New" onclick="send_data('New',userid)">New</button>
+        <button class="taskbar-button" id="Popular" onclick="send_data('Popular',userid)">Popular</button>
+        <button class="taskbar-button" id="Category" onclick="send_data('category',userid)">Category</button>
+        <button class="taskbar-button" id="profile" onclick="send_data('Profile',userid)">Profile</button>
+        <button class="taskbar-button" id="blog_creation" onclick="send_data('write_blog',userid)">Write Blog</button>
+    </div>
+    
+<form action="{% url 'Create_blog' %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    
+    <div class="editor-container" id="editorContainer">
+        <div class="editor-header">
+            <input type="text" name="blog_title" id="blog_title" placeholder="Blog Title">
+            <input type="file" name="blog_image" id="blog_image">
+            <select name="blog_category" id="blog_category">
+                <option value="Education">Education</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Sports">Sports</option>
+                <option value="News">News</option>
+                <option value="Psychology">Psychology</option>
+                <option value="Religion">Religion</option>
+                <option value="Technology">Technology</option>
+                <option value="Fiction">Fiction</option>
+                <option value="Business">Business</option>
+                <option value="Space">Space</option>
+            </select>
+        </div>
+        
+        <div class="toolbar">
+            <!-- Font Family -->
+            <div class="toolbar-group">
+                <select id="fontFamily" class="toolbar-select">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                </select>
+            </div>
+            
+            <!-- Font Size -->
+            <div class="toolbar-group">
+                <select id="fontSize" class="toolbar-select">
+                    <option value="10">10px</option>
+                    <option value="12">12px</option>
+                    <option value="14">14px</option>
+                    <option value="16" selected>16px</option>
+                    <option value="18">18px</option>
+                    <option value="20">20px</option>
+                    <option value="24">24px</option>
+                    <option value="28">28px</option>
+                    <option value="32">32px</option>
+                    <option value="36">36px</option>
+                    <option value="48">48px</option>
+                </select>
+            </div>
+            
+            <!-- Text Formatting -->
+            <div class="toolbar-group">
+                <button class="toolbar-btn" id="boldBtn" title="Bold (Ctrl+B)">
+                    <strong>B</strong>
+                </button>
+                <button class="toolbar-btn" id="italicBtn" title="Italic (Ctrl+I)">
+                    <em>I</em>
+                </button>
+                <button class="toolbar-btn" id="underlineBtn" title="Underline (Ctrl+U)">
+                    <u>U</u>
+                </button>
+            </div>
+            
+            <!-- Text Color -->
+            <div class="toolbar-group">
+                <label for="textColor" style="font-size: 12px; margin-right: 5px;">Color:</label>
+                <input type="color" id="textColor" class="color-input" value="#000000" title="Text Color">
+            </div>
+            
+            <!-- Background Color -->
+            <div class="toolbar-group">
+                <label for="bgColor" style="font-size: 12px; margin-right: 5px;">Highlight:</label>
+                <input type="color" id="bgColor" class="color-input" value="#ffff00" title="Background Color">
+            </div>
+            
+            <!-- Theme Selector -->
+            <div class="toolbar-group">
+                <span style="font-size: 12px; margin-right: 10px;">Theme:</span>
+                <div class="theme-selector">
+                    <div class="theme-btn light active" data-theme="light" title="Light Theme"></div>
+                    <div class="theme-btn dark" data-theme="dark" title="Dark Theme"></div>
+                    <div class="theme-btn sepia" data-theme="sepia" title="Sepia Theme"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="editor-area" id="editorArea" contenteditable="true" spellcheck="true" name="blog_context">
+            <p>You can write down your blog here.</p>
+        </div>
+        <input type="hidden" id="Id" name="userid">
+        <div class="status-bar">
+            <div class="word-count" id="wordCount" name="wordCount">Words: 0 | Characters: 0</div>
+            <div>Rich Text Editor v1.0</div>
+        </div>
+    </div>
+    
+    <input type="submit" onclick="send_data()">
+</form>
+
+    <script src="texteditor.js"></script>
+</body>
+</html>

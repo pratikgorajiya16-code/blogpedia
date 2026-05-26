@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    {{ blog_data|json_script:"blog-json" }}
+    {{ userid|json_script:"user-id" }}
+
+    <style>
+        #taskbar {
+    position: fixed;
+    top: 20px; /* below #intro */
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color:burlywood;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.taskbar-button {
+    display: block;
+    padding: 15px 20px;
+    margin: 10px;
+    background-color:antiquewhite;
+    font-size: 16px;
+    font-style: oblique;
+    border: 0;
+    color: black;
+    opacity: 0.6;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.taskbar-button:hover{opacity: 1;}
+
+        #Blog_content{
+            margin-left: 250px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;            
+        }
+    </style>
+
+</head>
+<body>
+    <div id="taskbar">
+        <button class="taskbar-button" onclick="send_data('home',userid)">Home</button>
+        <button class="taskbar-button" onclick="send_data('New',userid)">New</button>
+        <button class="taskbar-button" onclick="send_data('Popular',userid)">Popular</button>
+        <button class="taskbar-button" onclick="send_data('category',userid)">Category</button>
+        <button class="taskbar-button" id="profile" onclick="send_data('Profile',userid)">Profile</button>
+        <button class="taskbar-button" id="blog_creation" onclick="send_data('write_blog',userid)">Write Blog</button>
+    </div>
+    <div id="Blog_content">
+        <h1 id="title">Title</h1>
+        <h5 id="category">Category</h5>
+        <h3 id="ID">Id</h3>
+        <p id="Date">date</p>
+        <p id="author_id">author</p>
+        <div id="context">content</div>
+    </div>
+    <script>
+        const userid=document.getElementById("user-id").textContent;
+             function send_data(page,data=null) {
+    const message = "page_loaded";
+    switch (page) {
+        case 'home':
+            fetch("/Home/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+            
+        case 'display_blog':
+            fetch("/Blog_display/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'Profile':
+            fetch("/profile/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'write_blog':
+            fetch("/Blog_creation/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'New':
+            fetch("/new/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+        case 'Category':
+            fetch("/category/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                // body: JSON.stringify({ status: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data);
+            });
+            break;
+    }
+}
+
+        const Blog_data=JSON.parse(document.getElementById("blog-json").textContent)
+        document.addEventListener("DOMContentLoaded",function(){
+            document.getElementById("title").innerHTML=Blog_data.Blog_title;
+            document.getElementById("category").innerHTML=Blog_data.Blog_category;
+            document.getElementById("ID").innerHTML=Blog_data.Blog_id;
+            document.getElementById("Date").innerHTML=Blog_data.Blog_entry_date;
+            document.getElementById("author_id").innerHTML=Blog_data.Blog_Author_id;
+            document.getElementById("context").innerHTML=Blog_data.Blog_context; 
+        })
+    </script>
+</body>
+</html>

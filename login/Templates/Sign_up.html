@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <style>
+        .class{
+            width: 70px;
+            height: 100px;
+            display:flex;
+            text-align: center;
+            padding: 50px;
+            box-sizing: border-box;
+
+        }
+    </style>
+    <script>
+        
+        function generate_list(event){
+            event.preventDefault();
+            
+        const Interest=[];
+        const checkboxs=document.querySelectorAll(".checkboxs");
+        checkboxs.forEach(element => {
+        if (element.checked){
+            const label=document.querySelector(`label[for="${element.id}"]`);
+            if (label){
+                Interest.push(label.innerHTML);
+            }
+        }
+        });
+        console.log(Interest);
+        document.getElementById("interest").value = Interest.join(",");
+        event.target.submit();
+    };
+    
+
+        </script>
+        
+</head>
+<body>
+    <div id="form">
+        <form action="{% url 'Sign up' %}" method="post" onsubmit="generate_list(event)">
+            {% csrf_token %}
+            <div class="input">
+                <label for="User_name">User Name</label>
+                <input type="text" id="User_name" name="User_name">
+            </div>
+            <br>
+            <div>
+                <label for="userMail">Mail: </label>
+                <input type="email" name="userMail" id="userMail">
+            </div>
+            <br>
+            <div class="input">
+                <label for="Password">Password: </label>
+                <input type="password" id="Password" name="Password">
+            </div>
+            <br>
+            <div class="input">
+                <p>Interest: </p>
+                <label for="Education">Education</label> <input type="checkbox" id="Education" class="checkboxs">
+                <br>
+                <label for="Entertainment">Entertainment</label> <input type="checkbox" id="Entertainment" class="checkboxs">
+                <br>
+                <label for="Sports">Sports</label> <input type="checkbox" id="Sports" class="checkboxs">
+                <br>
+                <label for="News">News</label> <input type="checkbox" id="News" class="checkboxs">
+                <br>
+                <label for="Psychology">Psychology</label> <input type="checkbox" id="Psychology" class="checkboxs">
+                <br>
+                <label for="Religion">Religion</label> <input type="checkbox" id="Religion" class="checkboxs">
+                <br>
+                <label for="Technology">Technology</label> <input type="checkbox" id="Technology" class="checkboxs">
+                <br>
+                <label for="Fiction">Fiction</label> <input type="checkbox" id="Fiction" class="checkboxs">
+                <br>
+                <label for="Business">Business</label> <input type="checkbox" id="Business" class="checkboxs">
+                <br>
+                <label for="Space">Space</label> <input type="checkbox" id="Space" class="checkboxs">
+            </div>
+            <br>
+            <input type="hidden" name="interest" id="interest" class="input">
+            <input type="submit" name="Submit" id="Submit" class="input">
+            <input type="reset" name="Reset" id="Reset" class="input">
+        </form>
+    </div>
+</body>
+</html>
