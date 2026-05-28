@@ -35,13 +35,13 @@ def home(request,Data=None):
             query_data=list(Blog.objects.filter(Blog_category=i).values())
             data_string.extend(query_data)
 
-        for i in data_string:
-            if i.image_data:
+        for i, item in enumerate(data_string):
+            if i['image_data']:
                 image_base64 = base64.b64encode(i.image_data).decode('utf-8')
                 image_uri = f"data:{i.image_type};base64,{image_base64}"
-                (data_string[i])["image_uri"]=image_uri
+                data_string[i]["image_uri"]=image_uri
             else:
-                (data_string[i])["image_uri"]=None
+                data_string[i]["image_uri"]=None
             
         shuffle(data_string)
         Display_data={"display_data":data_string,"title":"Home"}
@@ -60,13 +60,13 @@ def save_blog(request):
         blog_category=(request.POST.get("blog_category"))
         blog_context=request.POST["blog_context"]
         words=json.loads(request.POST["wordCount"])
-        uploaded_file = json.loads(request.FILES['image'])
+        uploaded_file = request.FILES['blog_image']
         image_data = uploaded_file.read()
         image_type = uploaded_file.content_type
         blog_words=words[7:words.find("|")-1]
         blog_Author_id=json.loads(request.session.get("userid"))
 
-        query1=Blog(blog_title,blog_category,blog_context,image_data,image_type,blog_words,blog_Author_id)
+        query1=Blog(Blog_title=blog_title,Blog_category=blog_category,Blog_context=blog_context,image_data=image_data,image_type=image_type,Blog_characters=blog_words,Blog_Author_id=blog_Author_id)
         query1.save()
 
         # blog_data=Blog.objects.filter(Blog_title=blog_title,Blog_context=blog_context,blog_Author_id=blog_Author_id)
@@ -77,7 +77,7 @@ def save_blog(request):
 
 def display(request):
     if request.method=="GET":
-        blog_data=Blog.objects.filter(Blogid=(json.loads(request.body.decode("utf-8"))).get("status")).values()
+        blog_data=Blog.objects.filter(Blog_id=(json.loads(request.body.decode("utf-8"))).get("status")).values()
         data={"blog_data":blog_data,"title":"Blog"}
         return HttpResponse((loader.get_template('Blog.html')).render(data,request))
     
@@ -88,7 +88,7 @@ def Profile(request):
         display_data=display_data[0]
         wishlist_data=[]
         for i in display_data.user_wishlist:
-            wishlist_data.extends(list(Blog.objects.filter(Blog_id=i).values()))
+            wishlist_data.extend(list(Blog.objects.filter(Blog_id=i).values()))
         data={"display_data":display_data,"wishlist_data":wishlist_data,"title":"Profile"}
         return HttpResponse((loader.get_template('display_user.html')).render(data,request))
     

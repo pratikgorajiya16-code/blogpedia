@@ -127,7 +127,7 @@ body {
             switch (page) {
         case 'home':
             fetch("/Home/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -139,7 +139,7 @@ body {
             break;
         case 'display_blog':
             fetch("/Blog_display/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -153,7 +153,7 @@ body {
             break;
             case 'Profile':
                 fetch("/profile/", {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "X-CSRFToken": "{{ csrf_token }}"
@@ -167,7 +167,7 @@ body {
             break;
             case 'write_blog':
                 fetch("/Blog_creation/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -181,7 +181,7 @@ body {
             break;
         case 'New':
             fetch("/new/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -195,7 +195,7 @@ body {
             break;
             case 'Category':
                 fetch("/category/", {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "X-CSRFToken": "{{ csrf_token }}"
@@ -287,7 +287,7 @@ body {
             layoutDiv.className = 'generated-layout';
             
             if (Display_data[Index]){
-                const object=sampleData[Index]
+                const object=Display_data[Index]
                 Index++;
                 const nodeList = createelement(object);
                 nodeList.forEach(node => layoutDiv.appendChild(node));
@@ -447,9 +447,9 @@ body {
     
     
     document.addEventListener('DOMContentLoaded', () => {
-        const userid=JSON.parse(document.getElementById("id-json").textContent);
-        send_data(home,userid);
-        const Display_data=JSON.parse(document.getElementById("data-json").textContent);
+        // const userid=JSON.parse(document.getElementById("id-json").textContent);
+        send_data('home');
+        var Display_data=JSON.parse(document.getElementById("data-json").textContent);
         const title_text=document.getElementsByTagName("title").textContent;
         document.getElementById(title_text).disabled;
         generateLayoutPair(); // Initial pair

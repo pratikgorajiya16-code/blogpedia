@@ -22,9 +22,9 @@ def login(request):
             mydata=Users.objects.filter(userMail=user_Mail,userpassword=password).values().first()
             # data=Users.objects.get(userMail=user_Mail)
             
-            request.session["userid"]=mydata.pk
-            request.session["user_mail"]=mydata.userMail
-            request.session["user_interest"]=mydata.user_interest
+            request.session["userid"]=mydata["user_id"]
+            request.session["user_mail"]=mydata["userMail"]
+            request.session["user_interest"]=mydata["user_interest"]
 
             # User_interest=json.loads(data.user_interest)
             # mydata["User_interest"]=User_interest
@@ -49,8 +49,8 @@ def signup(request):
             
             User_interest = User_interest.split(',')
 
-            query1=Users(User_name,User_Mail,password)
-            query1.user_interest=json.dumps(User_interest)
+            query1=Users(Username=User_name, userMail=User_Mail, userpassword=password)
+            query1.user_interest=User_interest
             query1.save()
             
             request.session["userid"]=query1.pk
@@ -62,8 +62,7 @@ def signup(request):
             # Id=mydata["user_id"]
 
             # data={"mydata":mydata}
-            return redirect(views.home(request))
-            return HttpResponse((loader.get_template('greet.html')).render(data,request))
+            return views.home(request)
         else:
             return HttpResponse((loader.get_template('Sign_up.html')).render({},request))
     except json.JSONDecodeError:

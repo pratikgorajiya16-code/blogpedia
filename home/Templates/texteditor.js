@@ -1,7 +1,7 @@
 const userid=document.getElementById("id-json").textContent;
 const hidden=document.getElementById("Id");
 hidden.value=JSON.parse(userid);
-const title_text=document.getElementsByTagName("title").textContent;
+const title_text=document.getElementsByTagName("title")[0].textContent;
 document.getElementById(title_text).disabled;
         
 class RichTextEditor {
@@ -170,13 +170,13 @@ class RichTextEditor {
     const message = "page_loaded";
     switch (page) {
         case 'home':
-            fetch("{% url 'Home' %}", {
+            fetch("/Home/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"  // Only needed if you're POSTing from a Django template
                 },
-                body: JSON.stringify({ status: data })
+                // body: JSON.stringify({ status: data })
             })
             .then(response => response.json())
             .then(data => {
@@ -185,7 +185,7 @@ class RichTextEditor {
             break;
             
         case 'display_blog':
-            fetch("{% url 'display_blog' %}", {
+            fetch("/Blog_display", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -199,7 +199,7 @@ class RichTextEditor {
             });
             break;
         case 'Profile':
-            fetch("{% url 'profile' %}", {
+            fetch("/profile/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -213,13 +213,13 @@ class RichTextEditor {
             });
             break;
         case 'write_blog':
-            fetch("{% url 'Create_blog' %}", {
+            fetch("/Blog_creation/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"  // Only needed if you're POSTing from a Django template
                 },
-                body: JSON.stringify({ status: data })
+                // body: JSON.stringify({ status: data })
             })
             .then(response => response.json())
             .then(data => {
@@ -227,27 +227,13 @@ class RichTextEditor {
             });
             break;
         case 'New':
-            fetch("{% url 'new' %}", {
+            fetch("/new/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"  // Only needed if you're POSTing from a Django template
                 },
-                body: JSON.stringify({ status: data })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Server response:", data);
-            });
-            break;
-        case 'Popular':
-            fetch("{% url 'popular' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"  // Only needed if you're POSTing from a Django template
-                },
-                body: JSON.stringify({ status: data })
+                // body: JSON.stringify({ status: data })
             })
             .then(response => response.json())
             .then(data => {
@@ -255,13 +241,13 @@ class RichTextEditor {
             });
             break;
         case 'Category':
-            fetch("{% url 'category' %}", {
+            fetch("/category", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"  // Only needed if you're POSTing from a Django template
                 },
-                body: JSON.stringify({ status: data })
+                // body: JSON.stringify({ status: data })
             })
             .then(response => response.json())
             .then(data => {

@@ -12,7 +12,7 @@ function interest_array(){
             const id = element.id;
             const label = document.querySelector(`label[for="${id}"]`);
             if (label) {
-                Interest.push(label.innerHTML);
+                interest.push(label.innerHTML);
             }
         }
     });

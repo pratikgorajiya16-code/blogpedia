@@ -128,7 +128,7 @@ button:hover{opacity: 1;}
     switch (page) {
         case 'home':
             fetch("/Home/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -143,7 +143,7 @@ button:hover{opacity: 1;}
             
         case 'display_blog':
             fetch("/Blog_display/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -157,7 +157,7 @@ button:hover{opacity: 1;}
             break;
         case 'Profile':
             fetch("/profile/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -171,7 +171,7 @@ button:hover{opacity: 1;}
             break;
         case 'write_blog':
             fetch("/Blog_creation/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -185,7 +185,7 @@ button:hover{opacity: 1;}
             break;
         case 'New':
             fetch("/new/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -199,7 +199,7 @@ button:hover{opacity: 1;}
             break;
         case 'Category':
             fetch("/category/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -213,7 +213,7 @@ button:hover{opacity: 1;}
             break;
         case "see-all":
             fetch("/Specific_category/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"  // Only needed if you're POSTing from a Django template
@@ -305,7 +305,7 @@ function generateLayoutPair(){
         button.className="see-all";
         button.id=key;
         const specific_category={"userid":userid,"category":key}
-        button.addEventListener("onclick",function(){
+        button.addEventListener("click",function(){
             send_data("see-all",specific_category);
         });
         title.style.fontSize="20px";

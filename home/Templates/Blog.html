@@ -72,7 +72,7 @@
     switch (page) {
         case 'home':
             fetch("/Home/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -87,7 +87,7 @@
             
         case 'display_blog':
             fetch("/Blog_display/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -101,7 +101,7 @@
             break;
         case 'Profile':
             fetch("/profile/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -115,7 +115,7 @@
             break;
         case 'write_blog':
             fetch("/Blog_creation/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -129,7 +129,7 @@
             break;
         case 'New':
             fetch("/new/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
@@ -143,7 +143,7 @@
             break;
         case 'Category':
             fetch("/category/", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
